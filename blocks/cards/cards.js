@@ -7,6 +7,14 @@ export default function decorate(block) {
 
   const sliderActive = block.children.length > 2;
 
+  let visibleItems = 3;
+
+  if(window.innerWidth <= 991) {
+    visibleItems = 1;
+  } else if(window.innerWidth >= 992 && window.innerWidth <= 1200) {
+    visibleItems = 2;
+  }
+
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
     li.classList.add('card-item');
@@ -77,13 +85,13 @@ export default function decorate(block) {
 
     const updateButtons = () => {
       leftButton.classList.toggle('inactive', currentIndex === 0);
-      rightButton.classList.toggle('inactive', currentIndex >= cardItems.length - 3);
+      rightButton.classList.toggle('inactive', currentIndex >= cardItems.length - visibleItems);
     };
 
     const updateActiveClasses = () => {
       cardItems.forEach((card, index) => {
         card.classList.remove('active');
-        if (index >= currentIndex && index < currentIndex + 3) {
+        if (index >= currentIndex && index < currentIndex + visibleItems) {
           card.classList.add('active');
         }
       });
@@ -93,7 +101,7 @@ export default function decorate(block) {
       const cardWidth = cardItems[0].offsetWidth;
       if (direction === 'left' && currentIndex > 0) {
         currentIndex--;
-      } else if (direction === 'right' && currentIndex < cardItems.length - 3) {
+      } else if (direction === 'right' && currentIndex < cardItems.length - visibleItems) {
         currentIndex++;
       }
       cardList.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
